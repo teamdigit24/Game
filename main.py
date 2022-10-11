@@ -64,7 +64,7 @@ def main():
     # Initializing and setting up Pygame
     pygame.init()
     pygame.font.init()
-    logo = pygame.image.load("DIGIT_logo.png")
+    logo = pygame.image.load("images/DIGIT_logo.png")
     pygame.display.set_icon(logo)
     pygame.display.set_caption("The Hand Motor Function Test")
 
@@ -139,10 +139,10 @@ def title_screen(screen):
     running = True
 
     # Setting the background
-    bg = pygame.image.load("hand_palm.jpg")
+    bg = pygame.image.load("images/hand_palm.jpg")
     screen.blit(bg, (0, 0))
 
-    logo = pygame.image.load("DIGIT_logo.png")
+    logo = pygame.image.load("images/DIGIT_logo.png")
     screen.blit(logo, (-30, -30))
 
     # Displaying the game title
@@ -184,7 +184,7 @@ def benchmark_screen(screen):
     running = True
 
     # Creating the initial display
-    bg = pygame.image.load("hand_palm.jpg")
+    bg = pygame.image.load("images/hand_palm.jpg")
     screen.blit(bg, (0, 0))
     font = pygame.font.Font(None, 100)
         
@@ -246,6 +246,37 @@ def benchmark_screen(screen):
                         running = False
                         break
     
+    screen.blit(bg, (0, 0))
+    font = pygame.font.Font(None, 150)
+        
+    continue_surface = font.render("Press SPACE to", 1, 'white')
+    screen.blit(continue_surface, (350, 100))
+    continue_surface = font.render("proceed with testing", 1, 'white')
+    screen.blit(continue_surface, (250, 250))
+
+    quit_surface = font.render("Otherwise, press", 1, 'white')
+    screen.blit(quit_surface, (300, 450))
+    quit_surface = font.render("0 to exit game", 1, 'white')
+    screen.blit(quit_surface, (375, 600))
+
+    # Updating the full display surface
+    pygame.display.flip()
+    
+    running = True
+    while running:
+        for event in pygame.event.get():
+            # Quit the program if the window is closed
+            if event.type == pygame.QUIT:
+                return True, False
+
+            # Proceed to game by clicking SPACE
+            if pygame.key.get_pressed()[pygame.K_SPACE]:
+                return False, True
+            
+            # Quit game by clicking SPACE
+            if pygame.key.get_pressed()[pygame.K_0]:
+                return False, False
+                
     # return full_quit, continue_game
     return False, True
 
@@ -255,7 +286,7 @@ def help_screen(screen):
     running = True
     
     # Setting the background
-    bg = pygame.image.load("hand_palm.jpg")
+    bg = pygame.image.load("images/hand_palm.jpg")
     screen.blit(bg, (0, 0))
 
     # Displaying the info on how to begin
@@ -336,7 +367,7 @@ def countdown_screen(screen, task_number, task):
     max_time = 5
 
     # Setting the background
-    bg = pygame.image.load("circuit_bg.png")
+    bg = pygame.image.load("images/circuit_bg.png")
     screen.blit(bg, (0, 0))
 
     # Variables for screen design
@@ -388,7 +419,7 @@ def task_screen(screen, task_number, task):
     timer = 0
     max_time = 8
 
-    bg = pygame.image.load("circuit_bg.png")
+    bg = pygame.image.load("images/circuit_bg.png")
     header_font = pygame.font.Font(None, 100)
     
     # Variables for screen design
@@ -460,7 +491,7 @@ def benchmark_compare(screen, data, suite_number, task):
 
 def task_success(screen, task_num, points, points_earned_for_task):
     running = True
-    bg = pygame.image.load("applause.jpg")
+    bg = pygame.image.load("images/applause.jpg")
     screen.blit(bg, (0, -100))
     
     default_font = pygame.font.Font(None, 140)
@@ -502,7 +533,7 @@ def suite_complete_screen(screen, more_suites):
     running = True
     
     # Setting the background
-    bg = pygame.image.load("applause.jpg")
+    bg = pygame.image.load("images/applause.jpg")
     screen.blit(bg, (0, -100))
 
     default_font = pygame.font.Font(None, 140)
@@ -549,7 +580,7 @@ def suite_complete_screen(screen, more_suites):
 def final_screen(screen, points):
     running = True
 
-    bg = pygame.image.load("fist.jpg")
+    bg = pygame.image.load("images/fist.jpg")
     screen.blit(bg, (0, 0))
 
     # Displaying tasks completed message
