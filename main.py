@@ -351,9 +351,10 @@ def run_test_suite(screen, tests, points):
         
         # If task was completed successfully, displaying the screen
         if success:
-            points_earned_for_task = BASE_POINTS + int(time_remaining) * BONUS_POINTS_PER_SECOND
+            bonus_points = int(time_remaining) *  BONUS_POINTS_PER_SECOND
+            points_earned_for_task = BASE_POINTS + bonus_points
             points += points_earned_for_task
-            full_quit = task_success(screen, index+1, points, points_earned_for_task)
+            full_quit = task_success(screen, index+1, points, points_earned_for_task, bonus_points)
             if full_quit:
                 return True, points
 
@@ -463,7 +464,7 @@ def task_screen(screen, task_number, task):
 
             # Simulate success by clicking 0
             if pygame.key.get_pressed()[pygame.K_0]:
-                time_remaining = str(10-int(timer))
+                time_remaining = str(max_time-int(timer))
                 return True, time_remaining, False
 
     # Return success, time_remaining, full_quit
@@ -489,7 +490,7 @@ def benchmark_compare(screen, data, suite_number, task):
     return success
 
 
-def task_success(screen, task_num, points, points_earned_for_task):
+def task_success(screen, task_num, points, points_earned_for_task, bonus_points):
     running = True
     bg = pygame.image.load("images/applause.jpg")
     screen.blit(bg, (0, -100))
@@ -500,13 +501,25 @@ def task_success(screen, task_num, points, points_earned_for_task):
     task_success_surface = default_font.render("Task " + str(task_num) + " completed successfully!", 1, 'green')
     screen.blit(task_success_surface, (20, 30))
 
-    # Displaying +1 Points message
-    plus_point_surface = default_font.render("+" + str(points_earned_for_task) + " Points!", 1, 'blue')
-    screen.blit(plus_point_surface, (500, 250))
+    # Displaying +points message
+    #plus_point_surface = default_font.render("+" + str(points_earned_for_task) + " Points!", 1, 'blue')
+    #screen.blit(plus_point_surface, (500, 250))
+
+    # Displaying base points message
+    plus_point_surface = default_font.render("+" + str(BASE_POINTS) + " points for completing task!", 1, 'blue')
+    screen.blit(plus_point_surface, (20, 250))
+
+    # Displaying bonus points message
+    plus_point_surface = default_font.render("You earned +" + str(bonus_points) + " bonus points!", 1, 'blue')
+    if bonus_points == 10:
+        screen.blit(plus_point_surface, (50, 350))
+    elif bonus_points > 0:
+        screen.blit(plus_point_surface, (70, 350))
+
 
     # Displaying total points
     total_points_surface = default_font.render("Total Points: " + str(points), 1, 'blue')
-    screen.blit(total_points_surface, (375, 450))
+    screen.blit(total_points_surface, (375, 500))
 
     # Displaying the info on how to continue
     space_info = default_font.render("Press space to continue", 1, 'green')
