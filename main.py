@@ -1,10 +1,6 @@
-from cgi import test
-from string import whitespace
 import pygame
 import random
 import datetime
-
-from setuptools import sic
 
 # circuit bg = https://wallpaperaccess.com/full/85814.jpg
 # hand palm = https://images.hdqwalls.com/wallpapers/hand-scan-blue-flames-digital-art-cn.jpg
@@ -42,6 +38,17 @@ TEST_SUITE_3 = [
                 "Curl Thumb, Index, and Middle Fingers",
                 "Curl Index, Middle, and Ring Fingers"
                ]
+TEST_SUITE_4 = [
+                "Make a peace sign",
+                "Make a Vulcan sign",
+                "Make a fist bump",
+                "Make a rock and roll sign",
+                "Make a thumb up sign",
+                "Make a finger gun sign",
+                "Make a shaka sign",
+                "Make a pointer sign"
+               ]
+
 
 SUITE_1_BENCHMARKS = {"Curl Thumb": [],
                       "Curl Index Finger": [],
@@ -114,13 +121,20 @@ def main():
         else:
             more_suites = False
         
-        # Running the test suite
-        full_quit, points = run_test_suite(screen, test_suite, points)    
-        if full_quit:
-            return
-        
-        # Displaying the suite complete screen
-        next_suite, full_quit = suite_complete_screen(screen, more_suites)
+        repeat = True
+        while repeat == True:
+            test_suite_copy = test_suite.copy()
+            # Running the test suite
+            points_before = points
+            full_quit, points = run_test_suite(screen, test_suite_copy, points)    
+            if full_quit:
+                return
+            
+            # Displaying the suite complete screen
+            next_suite, repeat, full_quit = suite_complete_screen(screen, more_suites)
+    
+            if repeat:
+                points = points_before
 
         if full_quit:
             return
@@ -379,7 +393,6 @@ def countdown_screen(screen, task_number, task):
     else:
         font = pygame.font.Font(None, 90)    
         
-    print(len(task))
     font_b = pygame.font.Font(None, 150)
 
     while running and timer < max_time:
@@ -560,15 +573,23 @@ def suite_complete_screen(screen, more_suites):
         # Displaying test suite complete message
         next_suite_1 = default_font.render("If you would like to move on to", 1, 'blue')
         next_suite_2 = default_font.render("the next suite, press SPACE", 1, 'blue')
-        next_suite_3 = default_font.render("Otherwise, press 0", 1, 'blue')
-        screen.blit(next_suite_1, (40, 325))    
-        screen.blit(next_suite_2, (90, 425))    
-        screen.blit(next_suite_3, (300, 625))
+        next_suite_3 = default_font.render("If you would like to attempt", 1, 'blue')
+        next_suite_4 = default_font.render("the test suite again, press 9", 1, 'blue')
+        next_suite_5 = default_font.render("Otherwise, press 0", 1, 'blue')
+        screen.blit(next_suite_1, (40, 200))    
+        screen.blit(next_suite_2, (90, 300))
+        screen.blit(next_suite_3, (110, 450))    
+        screen.blit(next_suite_4, (110, 550))
+        screen.blit(next_suite_5, (300, 675))
 
     # If this is the last test suite
     else:
+        next_suite_1 = default_font.render("If you would like to attempt", 1, 'blue')
+        next_suite_2 = default_font.render("the test suite again, press 9", 1, 'blue')
         continue_surface = default_font.render("Press 0 to continue", 1, 'blue')
-        screen.blit(continue_surface, (300, 500))    
+        screen.blit(next_suite_1, (110, 250))    
+        screen.blit(next_suite_2, (110, 350))
+        screen.blit(continue_surface, (300, 600))    
 
     # Updating the full display surface
     pygame.display.flip()
@@ -577,17 +598,22 @@ def suite_complete_screen(screen, more_suites):
         for event in pygame.event.get():
             # Quit the program if the window is closed
             if event.type == pygame.QUIT:
-                return False, True
+                return False, False, True
             
             # Continue in the program is space is pressed
             if pygame.key.get_pressed()[pygame.K_SPACE]:
-                return True, False
+                return True, False, False
 
+            # Repeat test suite if 9 is pressed
+            if pygame.key.get_pressed()[pygame.K_9]:
+                return False, True, False
+
+            # Move on to final screen if 0 is pressed
             if pygame.key.get_pressed()[pygame.K_0]:
-                return False, False
+                return False, False, False
 
-    # return continue_next_suite, full_quit
-    return False, False
+    # return continue_next_suite, repeat, full_quit
+    return False, False, False
 
 
 def final_screen(screen, points):
