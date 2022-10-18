@@ -7,6 +7,15 @@ import datetime
 # applause = https://static.vecteezy.com/system/resources/previews/004/652/787/large_2x/clapping-hands-different-people-applaud-isolated-on-blue-background-female-and-male-arms-congratulation-illustration-in-flat-style-vector.jpg
 # fist = https://cdn.wallpaperjam.com/content/images/c0/d2/c0d27111b434a74cc0bd6d10072600ce7eab97a4.jpg 
 
+# peace sign = https://media.istockphoto.com/vectors/sign-of-victory-or-peace-hand-gesture-of-human-black-line-icon-two-vector-id1179573132?k=20&m=1179573132&s=170667a&w=0&h=0Hmfy1BRJlmmuHO29nOD9HkQ7x5uuig7Xzman9ZIPqI=
+# fist bump = https://i.pinimg.com/736x/a2/dd/16/a2dd16571d41e81475ee6a1b7a8ad01e.jpg
+# vulcan sign = https://i.pinimg.com/originals/f1/8d/53/f18d5349d2848bcacb9f57b7984d0a9b.jpg
+# rock and roll sign = https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREhr7L8TSfBPg0h3rIGL7SG9J6yEEV_J2irCKC29wr0RW2vL7TuUjtIAyVcywHq3OunPs&usqp=CAU
+# thumbs up sign = https://www.pngfind.com/pngs/m/5-58540_thumb-signal-computer-icons-encapsulated-postscript-thumbs-up.png
+# finger gun sign = https://media.istockphoto.com/vectors/hand-gun-or-pistol-gesture-line-hand-drawn-sketch-vector-vector-id1328882923?k=20&m=1328882923&s=612x612&w=0&h=e17PmB7FwDByqQknHBAmV38MLHua-SC4Ij86CwREoIk=
+# shaka sign = https://t3.ftcdn.net/jpg/04/05/44/82/360_F_405448249_tubHlutVfL1m0J3tNzJlomTbMLBBLnY4.jpg
+# pointer sign = https://www.nicepng.com/png/detail/12-125119_sign-language-d-finger-index-finger-clipart-black.png
+
 # Base points earned for successfully completing a test
 BASE_POINTS = 10
 
@@ -26,19 +35,17 @@ TEST_SUITE_1 = [
                ]
 TEST_SUITE_2 = [
                 "Curl Thumb and Index Fingers",
-                "Curl Middle and Ring Fingers",
-                "Curl Index and Middle Fingers",
+                "Curl Thumb and Middle Fingers",
+                "Curl Thumb and Ring Fingers",
                 "Curl Thumb and Pinky Fingers",
+                "Curl Index and Middle Fingers",
+                "Curl Index and Ring Fingers",
+                "Curl Index and Pinky Fingers",
+                "Curl Middle and Ring Fingers",
+                "Curl Middle and Pinky Fingers",
                 "Curl Ring and Pinky Fingers"
                ]
 TEST_SUITE_3 = [
-                "Curl All Fingers",
-                "Curl All Fingers Except for Thumb",
-                "Curl Middle, Ring, and Pinky Fingers",
-                "Curl Thumb, Index, and Middle Fingers",
-                "Curl Index, Middle, and Ring Fingers"
-               ]
-TEST_SUITE_4 = [
                 "Make a peace sign",
                 "Make a Vulcan sign",
                 "Make a fist bump",
@@ -49,7 +56,6 @@ TEST_SUITE_4 = [
                 "Make a pointer sign"
                ]
 
-
 SUITE_1_BENCHMARKS = {"Curl Thumb": [],
                       "Curl Index Finger": [],
                       "Curl Middle Finger": [],
@@ -57,13 +63,27 @@ SUITE_1_BENCHMARKS = {"Curl Thumb": [],
                       "Curl Pinky Finger": []
                      }
 SUITE_2_BENCHMARKS = {"Curl Thumb and Index Fingers": [],
-                      "Curl Middle and Ring Fingers": [],
+                      "Curl Thumb and Middle Fingers": [],
+                      "Curl Thumb and Ring Fingers": [],
+                      "Curl Thumb and Pinky Fingers": [],
                       "Curl Index and Middle Fingers": [],
-                      "Curl Thumb and Pinky Ring Fingers": [],
+                      "Curl Index and Ring Fingers": [],
+                      "Curl Index and Pinky Fingers": [],
+                      "Curl Middle and Ring Fingers": [],
+                      "Curl Middle and Pinky Fingers": [],
                       "Curl Ring and Pinky Fingers": []
                      } 
+SUITE_3_BENCHMARKS = {"Make a peace sign": [],
+                      "Make a Vulcan sign": [],
+                      "Make a fist bump": [],
+                      "Make a rock and roll sign": [],
+                      "Make a thumb up sign": [],
+                      "Make a finger gun sign": [],
+                      "Make a shaka sign": [],
+                      "Make a pointer sign": []
+                     }
 
-test_suites = [TEST_SUITE_2, TEST_SUITE_3]
+test_suites = [TEST_SUITE_1, TEST_SUITE_2, TEST_SUITE_3]
 
 benchmarks =  {}
 
@@ -223,10 +243,10 @@ def benchmark_screen(screen):
             if pygame.key.get_pressed()[pygame.K_SPACE]:
                 running = False
    
-    benchmark_file = open("Benchmarks/benchmarks.txt" + str(datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')), "a")
+    benchmark_file = open("Benchmarks/benchmarks_" + str(datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')) + ".txt", "a")
     
     # Going through every test suite
-    for suite_num in range(2):
+    for suite_num in range(3):
         # Going through every task in the suite
         for task in test_suites[suite_num]:
             running = True
@@ -254,7 +274,7 @@ def benchmark_screen(screen):
 
                     # Capture data by clicking SPACE
                     if pygame.key.get_pressed()[pygame.K_SPACE]:
-                        data = [0.0, 1.0, 2.0, 3.0, 4.0]
+                        data = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
                         benchmarks[task] = data
                         benchmark_file.write("" + task + ": " + str(data) + "\n")
                         running = False
@@ -495,7 +515,7 @@ def benchmark_compare(screen, data, suite_number, task):
     else:
         benchmark = TEST_SUITE_3[task]
     
-    for finger_num in range(5):
+    for finger_num in range(8):
         if (benchmark[finger_num] - data[finger_num]) > TOLERANCE:
             success=False
             return success
