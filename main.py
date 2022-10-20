@@ -56,35 +56,19 @@ TEST_SUITE_3 = [
                 "Make a pointer sign"
                ]
 
-SUITE_1_BENCHMARKS = {"Curl Thumb": [],
-                      "Curl Index Finger": [],
-                      "Curl Middle Finger": [],
-                      "Curl Ring Finger": [],
-                      "Curl Pinky Finger": []
-                     }
-SUITE_2_BENCHMARKS = {"Curl Thumb and Index Fingers": [],
-                      "Curl Thumb and Middle Fingers": [],
-                      "Curl Thumb and Ring Fingers": [],
-                      "Curl Thumb and Pinky Fingers": [],
-                      "Curl Index and Middle Fingers": [],
-                      "Curl Index and Ring Fingers": [],
-                      "Curl Index and Pinky Fingers": [],
-                      "Curl Middle and Ring Fingers": [],
-                      "Curl Middle and Pinky Fingers": [],
-                      "Curl Ring and Pinky Fingers": []
-                     } 
-SUITE_3_BENCHMARKS = {"Make a peace sign": [],
-                      "Make a Vulcan sign": [],
-                      "Make a fist bump": [],
-                      "Make a rock and roll sign": [],
-                      "Make a thumb up sign": [],
-                      "Make a finger gun sign": [],
-                      "Make a shaka sign": [],
-                      "Make a pointer sign": []
-                     }
+hand_signs_images = {
+                     "Make a peace sign": "peace_sign.jpg",
+                     "Make a Vulcan sign": "vulcan_sign.jpg",
+                     "Make a fist bump": "fist_bump.png",
+                     "Make a rock and roll sign": "rock_and_roll.png",
+                     "Make a thumb up sign": "thumbs_up.png",
+                     "Make a finger gun sign": "finger_gun.jpg",
+                     "Make a shaka sign": "shaka_sign.jpg",
+                     "Make a pointer sign": "pointer_sign.png"
+                    }
 
-test_suites = [TEST_SUITE_1, TEST_SUITE_2, TEST_SUITE_3]
-
+#test_suites = [TEST_SUITE_1, TEST_SUITE_2, TEST_SUITE_3]
+test_suites = [TEST_SUITE_3]
 benchmarks =  {}
 
 def main():
@@ -141,12 +125,18 @@ def main():
         else:
             more_suites = False
         
+        # Checking if this is the test suites with hand signs
+        if test_suite == TEST_SUITE_3:
+            hand_signs = True
+        else:
+            hand_signs = False
+
         repeat = True
         while repeat == True:
             test_suite_copy = test_suite.copy()
             # Running the test suite
             points_before = points
-            full_quit, points = run_test_suite(screen, test_suite_copy, points)    
+            full_quit, points = run_test_suite(screen, test_suite_copy, points, hand_signs)    
             if full_quit:
                 return
             
@@ -246,7 +236,7 @@ def benchmark_screen(screen):
     benchmark_file = open("Benchmarks/benchmarks_" + str(datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')) + ".txt", "a")
     
     # Going through every test suite
-    for suite_num in range(3):
+    for suite_num in range(len(test_suites)):
         # Going through every task in the suite
         for task in test_suites[suite_num]:
             running = True
@@ -366,20 +356,20 @@ def help_screen(screen):
     return False
        
 
-def run_test_suite(screen, tests, points):
+def run_test_suite(screen, tests, points, hand_signs):
     # Labels for the task display screen
-    for index in range(5):
+    for index in range(8):
 
         # Choosing a task at random and removing it from the list
         task = tests.pop(random.randrange(len(tests)))
 
         # Displaying the task countdown
-        full_quit = countdown_screen(screen, index+1, task)
+        full_quit = countdown_screen(screen, index+1, task, hand_signs)
         if full_quit:
             return True, points
 
         # Displaying the task
-        success, time_remaining, full_quit = task_screen(screen, index, task)    
+        success, time_remaining, full_quit = task_screen(screen, index, task, hand_signs)    
         if full_quit:
             return True, points
         
@@ -396,7 +386,7 @@ def run_test_suite(screen, tests, points):
     return False, points
 
 
-def countdown_screen(screen, task_number, task):
+def countdown_screen(screen, task_number, task, hand_signs):
     running = True
     timer = 0
     max_time = 5
@@ -421,7 +411,13 @@ def countdown_screen(screen, task_number, task):
 
         # Displaying the task
         text_surface = font.render("Task " + str(task_number) + ": " + task, 1, 'green')
-        screen.blit(text_surface, (25, 150))   
+        if hand_signs:
+            screen.blit(text_surface, (25, 25))
+            hand_sign_image = pygame.image.load("images/task_images/"+hand_signs_images[task])
+            hand_sign_image = pygame.transform.scale(hand_sign_image, (350, 350))
+            screen.blit(hand_sign_image, (575, 135))
+        else:       
+            screen.blit(text_surface, (25, 150))   
 
         # Displaying the countdown text
         text_surface = font_b.render("Testing beginning in " + str(max_time-int(timer)), 1, 'white')
@@ -448,7 +444,7 @@ def countdown_screen(screen, task_number, task):
     return False
 
 
-def task_screen(screen, task_number, task):
+def task_screen(screen, task_number, task, hand_signs):
     running = True
     timer = 0
     max_time = 8
@@ -478,11 +474,18 @@ def task_screen(screen, task_number, task):
         
 
         # Displaying the task
-        task_surface = task_font.render("Task: ", 1, 'green')
-        screen.blit(task_surface, (650, 150))
-        
-        task_surface = task_font.render(task, 1, 'white')
-        screen.blit(task_surface, (25, 300))
+        task_surface1 = task_font.render("Task: ", 1, 'green')
+        task_surface2 = task_font.render(task, 1, 'white')
+
+        if hand_signs:
+            screen.blit(task_surface1, (650, 25))
+            screen.blit(task_surface2, (25, 175))
+            hand_sign_image = pygame.image.load("images/task_images/"+hand_signs_images[task])
+            hand_sign_image = pygame.transform.scale(hand_sign_image, (350, 350))
+            screen.blit(hand_sign_image, (575, 300))
+        else:
+            screen.blit(task_surface1, (650, 150))
+            screen.blit(task_surface2, (25, 300))
 
         # Updating the full display surface
         pygame.display.flip()
