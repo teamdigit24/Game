@@ -183,10 +183,32 @@ def title_screen(screen):
     benchmark_info = begin_font.render("Press 0 to set new benchmarks", 1, 'white')
     screen.blit(benchmark_info, (240, 700))
 
+    # light shade of the button
+    button_color_light = (0,0,170)
+    
+    # dark shade of the button
+    button_color_dark = (0,0,100)
+    
+    # stores the width of the
+    # screen into a variable
+    width = screen.get_width()
+    
+    # stores the height of the
+    # screen into a variable
+    height = screen.get_height()
+    
+    # defining a font
+    button_font = pygame.font.Font(None, 85)
+    
+    # rendering a text written in
+    button_info = button_font.render('START' , True , 'white')
+    
     # Updating the full display surface
     pygame.display.flip()
 
     while running:
+        mouse = pygame.mouse.get_pos()
+
         for event in pygame.event.get():
             # Quit the program if the window is closed
             if event.type == pygame.QUIT:
@@ -195,10 +217,30 @@ def title_screen(screen):
             # Continue in the program if space is pressed
             if pygame.key.get_pressed()[pygame.K_SPACE]:
                 return False, False
-    
+
             # Set benchmarks if 0 is pressed
             if pygame.key.get_pressed()[pygame.K_0]:
                 return False, True
+        
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                #if the mouse is clicked on the
+                # button the game is terminated
+                if 650 <= mouse[0] <= 650+100 and 275 <= mouse[1] <= 275+100:
+                    return False, False
+
+        # if mouse is hovered on a button it
+        # changes to lighter shade 
+        if 650 <= mouse[0] <= 650+100 and 275 <= mouse[1] <= 275+100:
+            pygame.draw.rect(screen, button_color_light, [650,275,200,100])
+            
+        else:
+            pygame.draw.rect(screen, button_color_dark, [650,275,200,100])
+        
+        # superimposing the text onto our button
+        screen.blit(button_info , (650+10,275+25))
+        
+        # updates the frames of the game
+        pygame.display.update()
 
     #return full_quit, set_benchmarks
     return False, False
