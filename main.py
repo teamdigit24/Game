@@ -70,6 +70,12 @@ hand_signs_images = {
 test_suites = [TEST_SUITE_1, TEST_SUITE_2, TEST_SUITE_3]
 benchmarks =  {}
 
+# Light shade of button
+button_color_light = (0,0,255)
+# Dark shade of button
+button_color_dark = (0,0,170)
+# Font for button
+
 def main():
     # Initializing and setting up Pygame
     pygame.init()
@@ -189,11 +195,6 @@ def title_screen(screen):
     # Updating the full display surface
     pygame.display.flip()
 
-    # Light shade of button
-    button_color_light = (0,0,255)
-    # Dark shade of button
-    button_color_dark = (0,0,170)
-    # Font for button
     button_font = pygame.font.Font(None, 100)
     
     # Rendering text for start button
@@ -227,22 +228,20 @@ def title_screen(screen):
                 # Checking if start button is being pressed
                 if start_button_x <= mouse[0] <= start_button_x+300 and button_y <= mouse[1] <= button_y+300:
                     return False, False
-            # Checking if benchmark button is being pressed
+                # Checking if benchmark button is being pressed
                 if benchmark_button_x <= mouse[0] <= benchmark_button_x+300 and button_y <= mouse[1] <= button_y+300:
                     return False, True
 
 
         # Creating start button
         if start_button_x <= mouse[0] <= start_button_x+300 and button_y <= mouse[1] <= button_y+300:
-            pygame.draw.rect(screen, button_color_dark, [start_button_x,button_y,300,300])
-            
+            pygame.draw.rect(screen, button_color_dark, [start_button_x,button_y,300,300])    
         else:
             pygame.draw.rect(screen, button_color_light, [start_button_x,button_y,300,300])
         
         # Creating benchmark button
         if benchmark_button_x <= mouse[0] <= benchmark_button_x+450 and button_y <= mouse[1] <= button_y+300:
-            pygame.draw.rect(screen, button_color_dark, [benchmark_button_x,button_y,450,300])
-            
+            pygame.draw.rect(screen, button_color_dark, [benchmark_button_x,button_y,450,300])            
         else:
             pygame.draw.rect(screen, button_color_light, [benchmark_button_x,button_y,450,300])
 
@@ -404,10 +403,6 @@ def help_screen(screen):
     # Updating the full display surface
     pygame.display.flip()
 
-    # Light shade of button
-    button_color_light = (0,0,255)
-    # Dark shade of button
-    button_color_dark = (0,0,170)
     # Font for button
     button_font = pygame.font.Font(None, 100)
 
@@ -433,7 +428,7 @@ def help_screen(screen):
                 if button_x <= mouse[0] <= button_x+button_wdith and button_y <= mouse[1] <= button_y+button_height:
                     return False
 
-        # Creating start button
+        # Creating button
         if button_x <= mouse[0] <= button_x+button_wdith and button_y <= mouse[1] <= button_y+button_height:
             pygame.draw.rect(screen, button_color_dark, [button_x,button_y,button_wdith,button_height])
             
@@ -452,7 +447,7 @@ def help_screen(screen):
 
 def run_test_suite(screen, tests, points, hand_signs):
     # Labels for the task display screen
-    for index in range(5):
+    for index in range(1):
 
         # Choosing a task at random and removing it from the list
         task = tests.pop(random.randrange(len(tests)))
@@ -663,10 +658,6 @@ def task_success(screen, task_num, points, points_earned_for_task, bonus_points)
     # Updating the full display surface
     pygame.display.flip()
 
-    # Light shade of button
-    button_color_light = (0,0,255)
-    # Dark shade of button
-    button_color_dark = (0,0,170)
     # Font for button
     button_font = pygame.font.Font(None, 100)
 
@@ -712,6 +703,19 @@ def task_success(screen, task_num, points, points_earned_for_task, bonus_points)
 def suite_complete_screen(screen, more_suites):
     # Track if screen should be running 
     running = True
+
+    # Position of buttons
+    button_x = 100
+    next_suite_button_y = 150
+    button_width = 1300
+    button_height = 125
+
+    if more_suites:
+        repeat_suite_button_y = 370
+        quit_tests_button_y = 590
+    else:
+        repeat_suite_button_y = 250
+        quit_tests_button_y = 550
     
     # Setting the background
     bg = pygame.image.load("images/applause.jpg")
@@ -721,35 +725,34 @@ def suite_complete_screen(screen, more_suites):
 
     # Displaying test suite complete message
     suite_complete_surface = default_font.render("Good job! Test suite complete!", 1, 'green')
-    screen.blit(suite_complete_surface, (35, 50))
+    screen.blit(suite_complete_surface, (35, 25))
 
     # If there are more test suites
     if more_suites:
-        # Displaying test suite complete message
-        next_suite_1 = default_font.render("If you would like to move on to", 1, 'blue')
-        next_suite_2 = default_font.render("the next suite, press SPACE", 1, 'blue')
-        next_suite_3 = default_font.render("If you would like to attempt", 1, 'blue')
-        next_suite_4 = default_font.render("the test suite again, press 9", 1, 'blue')
-        next_suite_5 = default_font.render("Otherwise, press 0", 1, 'blue')
-        screen.blit(next_suite_1, (40, 200))    
-        screen.blit(next_suite_2, (90, 300))
-        screen.blit(next_suite_3, (110, 450))    
-        screen.blit(next_suite_4, (110, 550))
-        screen.blit(next_suite_5, (300, 675))
+        press_font = pygame.font.Font(None, 70)
+        next_suite_info = press_font.render("Or Press SPACE", 1, 'blue')
+        screen.blit(next_suite_info, (560, next_suite_button_y+button_height+10))
 
-    # If this is the last test suite
-    else:
-        next_suite_1 = default_font.render("If you would like to attempt", 1, 'blue')
-        next_suite_2 = default_font.render("the test suite again, press 9", 1, 'blue')
-        continue_surface = default_font.render("Press 0 to continue", 1, 'blue')
-        screen.blit(next_suite_1, (110, 250))    
-        screen.blit(next_suite_2, (110, 350))
-        screen.blit(continue_surface, (300, 600))    
+    # Keyboard presses info
+    press_font = pygame.font.Font(None, 70)
+    repeat_info = press_font.render("Or Press 9", 1, 'blue')
+    screen.blit(repeat_info, (625, repeat_suite_button_y+button_height+10))
+    quit_info = press_font.render("Or Press 0", 1, 'blue')
+    screen.blit(quit_info, (625, quit_tests_button_y+button_height+10))
 
     # Updating the full display surface
     pygame.display.flip()
 
+    button_font = pygame.font.Font(None, 100)
+
+    # Rendering text for buttons
+    button_info1 = button_font.render('Click to move onto next suite' , 1 , 'white')
+    button_info2 = button_font.render('Click to attempt test suite again' , 1 , 'white')
+    button_info3 = button_font.render('Otherwise, click here' , 1 , 'white')
+
     while running:
+        mouse = pygame.mouse.get_pos()
+
         for event in pygame.event.get():
             # Quit the program if the window is closed
             if event.type == pygame.QUIT:
@@ -766,14 +769,63 @@ def suite_complete_screen(screen, more_suites):
             # Move on to final screen if 0 is pressed
             if pygame.key.get_pressed()[pygame.K_0]:
                 return False, False, False
+            
+            # Checking if mouse button is being pressed
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if more_suites:
+                    # Checking if next suite button is being pressed
+                    if button_x <= mouse[0] <= button_x+button_width and next_suite_button_y <= mouse[1] <= next_suite_button_y+button_height:
+                        return True, False, False
+                # Checking if repeat suite button is being pressed
+                if button_x <= mouse[0] <= button_x+button_width and repeat_suite_button_y <= mouse[1] <= repeat_suite_button_y+button_height:
+                    return False, True, False
+                # Checking if quit tests button is being pressed
+                if button_x <= mouse[0] <= button_x+button_width and quit_tests_button_y <= mouse[1] <= quit_tests_button_y+button_height:
+                    return False, False, False
+
+        if more_suites:
+            # Creating next suite button
+            if button_x <= mouse[0] <= button_x+button_width and next_suite_button_y <= mouse[1] <= next_suite_button_y+button_height:
+                pygame.draw.rect(screen, button_color_dark, [button_x,next_suite_button_y,button_width,button_height])
+            else:
+                pygame.draw.rect(screen, button_color_light, [button_x,next_suite_button_y,button_width,button_height])
+
+            # Adding text to buttons
+            screen.blit(button_info1 , (button_x+155,next_suite_button_y+30))
+
+        # Creating repeat suite button
+        if button_x <= mouse[0] <= button_x+button_width and repeat_suite_button_y <= mouse[1] <= repeat_suite_button_y+button_height:
+            pygame.draw.rect(screen, button_color_dark, [button_x,repeat_suite_button_y,button_width,button_height])
+        else:
+            pygame.draw.rect(screen, button_color_light, [button_x,repeat_suite_button_y,button_width,button_height])
+
+        # Creating quit tests button
+        if button_x <= mouse[0] <= button_x+button_width and quit_tests_button_y <= mouse[1] <= quit_tests_button_y+button_height:
+            pygame.draw.rect(screen, button_color_dark, [button_x,quit_tests_button_y,button_width,button_height])
+        else:
+            pygame.draw.rect(screen, button_color_light, [button_x,quit_tests_button_y,button_width,button_height])
+
+        screen.blit(button_info2 , (button_x+115,repeat_suite_button_y+30))
+        screen.blit(button_info3 , (button_x+300,quit_tests_button_y+30))
+
+        # Updating game display
+        pygame.display.update()    
 
     # return continue_next_suite, repeat, full_quit
     return False, False, False
 
 
 def final_screen(screen, points):
+    # Track if screen should be running 
     running = True
 
+    # Position of buttons
+    button_y = 500
+    button_x = 600
+    button_wdith = 350
+    button_height = 200
+
+    # Setting the background
     bg = pygame.image.load("images/fist.jpg")
     screen.blit(bg, (0, 0))
 
@@ -785,17 +837,26 @@ def final_screen(screen, points):
     # Displaying total points
     points_font = pygame.font.Font(None, 250)
     points_surface = points_font.render("Total Points: " + str(points), 1, 'green')
-    screen.blit(points_surface, (50, 350))
-
+    screen.blit(points_surface, (50, 250))
+    
     # Displaying how to quit
-    space_font = pygame.font.Font(None, 125)
-    space_info = space_font.render("Press space to quit", 1, 'white')
-    screen.blit(space_info, (325, 700))
+    quit_font = pygame.font.Font(None, 75)
+    quit_info = quit_font.render("Or Press SPACE", 1, 'blue')
+    screen.blit(quit_info, (575, 710))
 
     # Updating the full display surface
     pygame.display.flip()
 
+    # Font for the button
+    button_font = pygame.font.Font(None, 100)
+
+    # Rendering text for start button
+    button_info1 = button_font.render('Click to' , 1 , 'white')
+    button_info2 = button_font.render('Quit' , 1 , 'white')
+
     while running:
+        mouse = pygame.mouse.get_pos()
+
         for event in pygame.event.get():
             # Quit the program if the window is closed
             if event.type == pygame.QUIT:
@@ -804,6 +865,26 @@ def final_screen(screen, points):
             # Continue in the program is space is pressed
             if pygame.key.get_pressed()[pygame.K_SPACE]:
                 running = False
+
+            # Checking if mouse button is being pressed
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                # Checking if button is being pressed
+                if button_x <= mouse[0] <= button_x+button_wdith and button_y <= mouse[1] <= button_y+button_height:
+                    return False
+            
+        # Creating button
+        if button_x <= mouse[0] <= button_x+button_wdith and button_y <= mouse[1] <= button_y+button_height:
+            pygame.draw.rect(screen, button_color_dark, [button_x,button_y,button_wdith,button_height])
+            
+        else:
+            pygame.draw.rect(screen, button_color_light, [button_x,button_y,button_wdith,button_height])
+
+        # Adding text to start button
+        screen.blit(button_info1 , (button_x+50,button_y+35))
+        screen.blit(button_info2 , (button_x+100,button_y+110))
+
+        # Updating game display
+        pygame.display.update()
 
     return False
 
