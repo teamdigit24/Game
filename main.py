@@ -31,7 +31,10 @@ TEST_SUITE_1 = [
                 "Curl Index Finger",
                 "Curl Middle Finger",
                 "Curl Ring Finger",
-                "Curl Pinky Finger"
+                "Curl Pinky Finger",
+                "Move Index Finger Away From Other Fingers",
+                "Move Pinky Finger Away From Other Fingers",
+                "Separate Index and Middle Fingers from Pinky and Ring Fingers"
                ]
 TEST_SUITE_2 = [
                 "Curl Thumb and Index Fingers",
@@ -43,7 +46,10 @@ TEST_SUITE_2 = [
                 "Curl Index and Pinky Fingers",
                 "Curl Middle and Ring Fingers",
                 "Curl Middle and Pinky Fingers",
-                "Curl Ring and Pinky Fingers"
+                "Curl Ring and Pinky Fingers",
+                "Move Index Finger Away From Other Fingers",
+                "Move Pinky Finger Away From Other Fingers",
+                "Separate Index and Middle Fingers from Pinky and Ring Fingers"
                ]
 TEST_SUITE_3 = [
                 "Make a peace sign",
@@ -53,7 +59,10 @@ TEST_SUITE_3 = [
                 "Make a thumb up sign",
                 "Make a finger gun sign",
                 "Make a shaka sign",
-                "Make a pointer sign"
+                "Make a pointer sign",
+                "Move Index Finger Away From Other Fingers",
+                "Move Pinky Finger Away From Other Fingers",
+                "Separate Index and Middle Fingers from Pinky and Ring Fingers"
                ]
 
 hand_signs_images = {
@@ -447,7 +456,7 @@ def help_screen(screen):
 
 def run_test_suite(screen, tests, points, hand_signs):
     # Labels for the task display screen
-    for index in range(1):
+    for index in range(5):
 
         # Choosing a task at random and removing it from the list
         task = tests.pop(random.randrange(len(tests)))
@@ -488,31 +497,41 @@ def countdown_screen(screen, task_number, task, hand_signs):
     if len(task) < 20:
         font = pygame.font.Font(None, 150)    
     elif len(task) < 30:
-        font = pygame.font.Font(None, 110)    
-    else:
+        font = pygame.font.Font(None, 130)    
+    elif len(task) < 60:
         font = pygame.font.Font(None, 90)    
+    else:
+        font = pygame.font.Font(None, 65)   
         
-    font_b = pygame.font.Font(None, 150)
+    font_countdown = pygame.font.Font(None, 150)
 
     while running and timer < max_time:
         # Setting the background
         screen.blit(bg, (0, 0))     
 
-        # Displaying the task
-        text_surface = font.render("Task " + str(task_number) + ": " + task, 1, 'green')
-        if hand_signs:
+        # If on test suite with hand signs, need to account for pictures
+        if hand_signs and (hand_signs_images.get(task) != None):
+            # Displaying task number and description
+            text_surface = font.render("Task " + str(task_number) + ": " + task, 1, 'green')
             screen.blit(text_surface, (25, 25))
-            hand_sign_image = pygame.image.load("images/task_images/"+hand_signs_images[task])
+            # Displaying image for hand sign
+            hand_sign_image = pygame.image.load("images/task_images/"+hand_signs_images.get(task))
             hand_sign_image = pygame.transform.scale(hand_sign_image, (350, 350))
             screen.blit(hand_sign_image, (575, 135))
         else:       
-            screen.blit(text_surface, (25, 150))   
+            # Displaying task number
+            task_num_font = pygame.font.Font(None, 150)
+            task_num_surface = task_num_font.render("Task " +str(task_number) + ": ", 1, 'green')
+            screen.blit(task_num_surface, (615, 25))
+            # Displaying task description
+            text_surface = font.render(task, 1, 'green')
+            screen.blit(text_surface, (25, 200))   
 
         # Displaying the countdown text
-        text_surface = font_b.render("Testing beginning in " + str(max_time-int(timer)), 1, 'white')
+        text_surface = font_countdown.render("Testing beginning in " + str(max_time-int(timer)), 1, 'white')
         screen.blit(text_surface, (200, 500))
 
-        text_surface = font_b.render("Get Ready", 1, 'white')
+        text_surface = font_countdown.render("Get Ready", 1, 'white')
         screen.blit(text_surface, (500, 650))
 
         # Updating the full display surface
@@ -540,14 +559,17 @@ def task_screen(screen, task_number, task, hand_signs):
 
     bg = pygame.image.load("images/circuit_bg.png")
     header_font = pygame.font.Font(None, 100)
+    task_num_font = pygame.font.Font(None, 150)
     
     # Variables for screen design
     if len(task) < 20:
         task_font = pygame.font.Font(None, 150)    
     elif len(task) < 30:
         task_font = pygame.font.Font(None, 130)    
+    elif len(task) < 60:
+        task_font = pygame.font.Font(None, 90)    
     else:
-        task_font = pygame.font.Font(None, 110)    
+        task_font = pygame.font.Font(None, 65)
 
     while running and timer < max_time:
         # Setting the background
@@ -563,13 +585,13 @@ def task_screen(screen, task_number, task, hand_signs):
         
 
         # Displaying the task
-        task_surface1 = task_font.render("Task: ", 1, 'green')
+        task_surface1 = task_num_font.render("Task: ", 1, 'green')
         task_surface2 = task_font.render(task, 1, 'white')
-
-        if hand_signs:
+        
+        if hand_signs and (hand_signs_images.get(task) != None):
             screen.blit(task_surface1, (650, 25))
             screen.blit(task_surface2, (25, 175))
-            hand_sign_image = pygame.image.load("images/task_images/"+hand_signs_images[task])
+            hand_sign_image = pygame.image.load("images/task_images/"+hand_signs_images.get(task))
             hand_sign_image = pygame.transform.scale(hand_sign_image, (350, 350))
             screen.blit(hand_sign_image, (575, 300))
         else:
