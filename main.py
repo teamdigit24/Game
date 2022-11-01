@@ -110,7 +110,7 @@ def main():
         benchmark_file = open("Benchmarks/benchmarks_default.txt", "r")
         for line in benchmark_file:
             split_line = line.split(":")
-            
+
             
             values = split_line[1].strip().strip('][').split(', ')
 
