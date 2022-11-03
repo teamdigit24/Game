@@ -287,50 +287,53 @@ def benchmark_screen(screen):
    
     benchmark_file = open("Benchmarks/benchmarks_" + str(datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')) + ".txt", "a")
     
-    # Going through every test suite
+    # Creating a dict to hold the benchmark values
     for suite_num in range(len(test_suites)):
-        # Going through every task in the suite
         for task in test_suites[suite_num]:
-            running = True
-            while running:
-                screen.blit(bg, (0, 0))
+            benchmarks[task] = []
+    
+    # Setting the benchmark for each task
+    for task in benchmarks:
+        running = True
+        while running:
+            screen.blit(bg, (0, 0))
 
-                # Displaying the task
-                font = pygame.font.Font(None, 100)
-                task_surface = font.render("Task: ", 1, 'white')
-                screen.blit(task_surface, (650, 150))
+            # Displaying the task
+            font = pygame.font.Font(None, 100)
+            task_surface = font.render("Task: ", 1, 'white')
+            screen.blit(task_surface, (650, 150))
 
-                # Variables for screen design
-                if len(task) < 20:
-                    task_font = pygame.font.Font(None, 150)    
-                elif len(task) < 30:
-                    task_font = pygame.font.Font(None, 130)    
-                elif len(task) < 60:
-                    task_font = pygame.font.Font(None, 90)    
-                else:
-                    task_font = pygame.font.Font(None, 65) 
-                task_surface = task_font.render(task, 1, 'white')
-                screen.blit(task_surface, (20, 300))
+            # Determining task font size
+            if len(task) < 20:
+                task_font = pygame.font.Font(None, 150)    
+            elif len(task) < 30:
+                task_font = pygame.font.Font(None, 130)    
+            elif len(task) < 60:
+                task_font = pygame.font.Font(None, 90)    
+            else:
+                task_font = pygame.font.Font(None, 65) 
+            task_surface = task_font.render(task, 1, 'white')
+            screen.blit(task_surface, (20, 300))
 
-                # Displaying how to record data
-                capture_surface = font.render("Press SPACE to record data", 1, 'white')
-                screen.blit(capture_surface, (300, 700))
+            # Displaying how to record data
+            capture_surface = font.render("Press SPACE to record data", 1, 'white')
+            screen.blit(capture_surface, (300, 700))
 
-                # Updating the full display surface
-                pygame.display.flip()
+            # Updating the full display surface
+            pygame.display.flip()
 
-                for event in pygame.event.get():
-                    # Quit the program if the window is closed
-                    if event.type == pygame.QUIT:
-                        return True, False
+            for event in pygame.event.get():
+                # Quit the program if the window is closed
+                if event.type == pygame.QUIT:
+                    return True, False
 
-                    # Capture data by clicking SPACE
-                    if pygame.key.get_pressed()[pygame.K_SPACE]:
-                        data = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
-                        benchmarks[task] = data
-                        benchmark_file.write("" + task + ": " + str(data) + "\n")
-                        running = False
-                        break
+                # Capture data by clicking SPACE
+                if pygame.key.get_pressed()[pygame.K_SPACE]:
+                    data = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
+                    benchmarks[task] = data
+                    benchmark_file.write("" + task + ": " + str(data) + "\n")
+                    running = False
+                    break
     
     screen.blit(bg, (0, 0))
     font = pygame.font.Font(None, 150)
