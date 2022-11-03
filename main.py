@@ -2,20 +2,6 @@ import pygame
 import random
 import datetime
 
-# circuit bg = https://wallpaperaccess.com/full/85814.jpg
-# hand palm = https://images.hdqwalls.com/wallpapers/hand-scan-blue-flames-digital-art-cn.jpg
-# applause = https://static.vecteezy.com/system/resources/previews/004/652/787/large_2x/clapping-hands-different-people-applaud-isolated-on-blue-background-female-and-male-arms-congratulation-illustration-in-flat-style-vector.jpg
-# fist = https://cdn.wallpaperjam.com/content/images/c0/d2/c0d27111b434a74cc0bd6d10072600ce7eab97a4.jpg 
-
-# peace sign = https://media.istockphoto.com/vectors/sign-of-victory-or-peace-hand-gesture-of-human-black-line-icon-two-vector-id1179573132?k=20&m=1179573132&s=170667a&w=0&h=0Hmfy1BRJlmmuHO29nOD9HkQ7x5uuig7Xzman9ZIPqI=
-# fist bump = https://i.pinimg.com/736x/a2/dd/16/a2dd16571d41e81475ee6a1b7a8ad01e.jpg
-# vulcan sign = https://i.pinimg.com/originals/f1/8d/53/f18d5349d2848bcacb9f57b7984d0a9b.jpg
-# rock and roll sign = https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREhr7L8TSfBPg0h3rIGL7SG9J6yEEV_J2irCKC29wr0RW2vL7TuUjtIAyVcywHq3OunPs&usqp=CAU
-# thumbs up sign = https://www.pngfind.com/pngs/m/5-58540_thumb-signal-computer-icons-encapsulated-postscript-thumbs-up.png
-# finger gun sign = https://media.istockphoto.com/vectors/hand-gun-or-pistol-gesture-line-hand-drawn-sketch-vector-vector-id1328882923?k=20&m=1328882923&s=612x612&w=0&h=e17PmB7FwDByqQknHBAmV38MLHua-SC4Ij86CwREoIk=
-# shaka sign = https://t3.ftcdn.net/jpg/04/05/44/82/360_F_405448249_tubHlutVfL1m0J3tNzJlomTbMLBBLnY4.jpg
-# pointer sign = https://www.nicepng.com/png/detail/12-125119_sign-language-d-finger-index-finger-clipart-black.png
-
 # Base points earned for successfully completing a test
 BASE_POINTS = 10
 
@@ -83,7 +69,6 @@ benchmarks =  {}
 button_color_light = (0,0,255)
 # Dark shade of button
 button_color_dark = (0,0,170)
-# Font for button
 
 def main():
     # Initializing and setting up Pygame
@@ -314,7 +299,17 @@ def benchmark_screen(screen):
                 font = pygame.font.Font(None, 100)
                 task_surface = font.render("Task: ", 1, 'white')
                 screen.blit(task_surface, (650, 150))
-                task_surface = font.render(task, 1, 'white')
+
+                # Variables for screen design
+                if len(task) < 20:
+                    task_font = pygame.font.Font(None, 150)    
+                elif len(task) < 30:
+                    task_font = pygame.font.Font(None, 130)    
+                elif len(task) < 60:
+                    task_font = pygame.font.Font(None, 90)    
+                else:
+                    task_font = pygame.font.Font(None, 65) 
+                task_surface = task_font.render(task, 1, 'white')
                 screen.blit(task_surface, (20, 300))
 
                 # Displaying how to record data
