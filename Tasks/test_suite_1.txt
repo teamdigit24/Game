@@ -1,0 +1,8 @@
+Curl Thumb
+Curl Index Finger
+Curl Middle Finger
+Curl Ring Finger
+Curl Pinky Finger
+Move Index Finger Away From Other Fingers
+Move Pinky Finger Away From Other Fingers
+Separate Index and Middle Fingers from Pinky and Ring Fingers

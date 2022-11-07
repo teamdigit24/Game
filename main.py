@@ -1,6 +1,7 @@
 import pygame
 import random
 import datetime
+import os
 
 # Base points earned for successfully completing a test
 BASE_POINTS = 10
@@ -51,6 +52,7 @@ TEST_SUITE_3 = [
                 "Separate Index and Middle Fingers from Pinky and Ring Fingers"
                ]
 
+# File paths for the images for hand sign tasks
 hand_signs_images = {
                      "Make a peace sign": "peace_sign.jpg",
                      "Make a Vulcan sign": "vulcan_sign.jpg",
@@ -62,7 +64,10 @@ hand_signs_images = {
                      "Make a pointer sign": "pointer_sign.png"
                     }
 
-test_suites = [TEST_SUITE_1, TEST_SUITE_2, TEST_SUITE_3]
+# Test suites to use for testing
+test_suites1 = [TEST_SUITE_1, TEST_SUITE_2, TEST_SUITE_3]
+test_suites = []
+# Dict to hold the benchmarks
 benchmarks =  {}
 
 # Light shade of button
@@ -79,31 +84,31 @@ def main():
     pygame.display.set_caption("The Hand Motor Function Test")
 
     # Setting game display resolution
-    # Assuming computer resolution is at least 1920 x 1080
+    #   Assuming computer resolution is at least 1920 x 1080
     screen = pygame.display.set_mode((1500, 800))
+    
+    import_tasks()
 
     # Displaying the title screen
     full_quit, set_benchmarks = title_screen(screen)
     if full_quit:
         return
 
+    # If user wants to set benchmarks
     if set_benchmarks:
         full_quit, continue_game = benchmark_screen(screen)
         if full_quit | (not continue_game):
             return
+    # Otherwise, use default benchmarks
     else:
         benchmark_file = open("Benchmarks/benchmarks_default.txt", "r")
         for line in benchmark_file:
+            # Doing some string parsing to get needed data
             split_line = line.split(":")
-
-            
             values = split_line[1].strip().strip('][').split(', ')
-
             for i in range(len(values)):
                 values[i] = float(values[i])
-
             split_line[1] = values
-            
             benchmarks[split_line[0]] = split_line[1]
     
     # Displaying the help screen
@@ -128,8 +133,10 @@ def main():
         else:
             hand_signs = False
 
+        # Whether user wants to repeat test suite or not
         repeat = True
         while repeat == True:
+            # Creating a copy of the test suite to preserve the original in case of reattempts
             test_suite_copy = test_suite.copy()
             # Running the test suite
             points_before = points
@@ -368,6 +375,17 @@ def benchmark_screen(screen):
                 
     # return full_quit, continue_game
     return False, True
+
+
+def import_tasks():
+    for filename in os.listdir('Tasks'):
+        with open(os.path.join(os.getcwd(), 'Tasks', filename), 'r') as task_file:
+            suite = []
+            for task in task_file:
+                suite.append(task.strip())
+            test_suites.append(suite)
+    
+    print(test_suites)
 
 
 def help_screen(screen):
