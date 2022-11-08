@@ -75,6 +75,7 @@ button_color_light = (0,0,255)
 # Dark shade of button
 button_color_dark = (0,0,170)
 
+# Description: Main function that controls the overall game flow
 def main():
     # Initializing and setting up Pygame
     pygame.init()
@@ -87,6 +88,7 @@ def main():
     #   Assuming computer resolution is at least 1920 x 1080
     screen = pygame.display.set_mode((1500, 800))
     
+    # Import tasks from external files
     import_tasks()
 
     # Displaying the title screen
@@ -152,7 +154,6 @@ def main():
 
         if full_quit:
             return
-
         if next_suite == False:
             break
     
@@ -162,6 +163,9 @@ def main():
     return
 
 
+# Given: Game screen
+# Returns: Whether to full quit game?, Whether to set benchmarks?
+# Description: Title screen of game which user sees first 
 def title_screen(screen):
     # Track if screen should be running 
     running = True
@@ -196,19 +200,20 @@ def title_screen(screen):
     # Updating the full display surface
     pygame.display.flip()
 
+    # Font for the buttons
     button_font = pygame.font.Font(None, 100)
-    
     # Rendering text for start button
     start_button_info1 = button_font.render('Click to' , 1 , 'white')
     start_button_info2 = button_font.render('begin' , 1 , 'white')
     start_button_info3 = button_font.render('tests' , 1 , 'white')
-    
     # Rendering text for benchmark button
     benchmark_button_info1 = button_font.render('Click to' , 1 , 'white')
     benchmark_button_info2 = button_font.render('set' , 1 , 'white')
     benchmark_button_info3 = button_font.render('benchmarks' , 1 , 'white')
 
+    # While this screen should be running
     while running:
+        # Current position of the mouse
         mouse = pygame.mouse.get_pos()
 
         for event in pygame.event.get():
@@ -263,23 +268,28 @@ def title_screen(screen):
     return False, False
 
 
+# Given: Game screen
+# Returns: Whether to full quit game?, Whether to continue with game?
+# Description: Title screen of game which user sees first 
 def benchmark_screen(screen):
+    # Track if screen should be running 
     running = True
 
     # Creating the initial display
     bg = pygame.image.load("images/hand_palm.jpg")
     screen.blit(bg, (0, 0))
     font = pygame.font.Font(None, 100)
-        
+    # Rendering instructions    
     info_surface = font.render("Each task will be displayed one by one", 1, 'white')
     screen.blit(info_surface, (105, 50))
     info_surface = font.render("Press SPACE to capture current hand data", 1, 'white')
     screen.blit(info_surface, (40, 170))
-    
+
     font = pygame.font.Font(None, 150)
     info_surface = font.render("Press SPACE to start", 1, 'green')
     screen.blit(info_surface, (220, 650))
 
+    # Updating the full display surface
     pygame.display.flip()
 
     while running:
@@ -291,7 +301,8 @@ def benchmark_screen(screen):
             # Continue in the program if space is pressed
             if pygame.key.get_pressed()[pygame.K_SPACE]:
                 running = False
-   
+    
+    # Create new benchmark file
     benchmark_file = open("Benchmarks/benchmarks_" + str(datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')) + ".txt", "a")
     
     # Creating a dict to hold the benchmark values
@@ -306,9 +317,9 @@ def benchmark_screen(screen):
             screen.blit(bg, (0, 0))
 
             # Displaying the task
-            font = pygame.font.Font(None, 100)
-            task_surface = font.render("Task: ", 1, 'white')
-            screen.blit(task_surface, (650, 150))
+            task_word_font = pygame.font.Font(None, 150)
+            task_surface = task_word_font.render("Task: ", 1, 'white')
+            screen.blit(task_surface, (625, 150))
 
             # Determining task font size
             if len(task) < 20:
@@ -323,7 +334,8 @@ def benchmark_screen(screen):
             screen.blit(task_surface, (20, 300))
 
             # Displaying how to record data
-            capture_surface = font.render("Press SPACE to record data", 1, 'white')
+            capture_font = pygame.font.Font(None, 100)
+            capture_surface = capture_font.render("Press SPACE to record data", 1, 'white')
             screen.blit(capture_surface, (300, 700))
 
             # Updating the full display surface
@@ -342,14 +354,15 @@ def benchmark_screen(screen):
                     running = False
                     break
     
+    # Setting the background
     screen.blit(bg, (0, 0))
     font = pygame.font.Font(None, 150)
-        
+    
+    # Rendering font for instructions
     continue_surface = font.render("Press SPACE to", 1, 'white')
     screen.blit(continue_surface, (350, 100))
     continue_surface = font.render("proceed with testing", 1, 'white')
     screen.blit(continue_surface, (250, 250))
-
     quit_surface = font.render("Otherwise, press", 1, 'white')
     screen.blit(quit_surface, (300, 450))
     quit_surface = font.render("0 to exit game", 1, 'white')
@@ -377,17 +390,23 @@ def benchmark_screen(screen):
     return False, True
 
 
+# Given: None
+# Returns: None 
+# Description: Imports tasks from external files and creates the test suites
 def import_tasks():
+    # Opening all files in /Tasks folder
     for filename in os.listdir('Tasks'):
         with open(os.path.join(os.getcwd(), 'Tasks', filename), 'r') as task_file:
             suite = []
+            # Adding tasks in thos file to test suites
             for task in task_file:
                 suite.append(task.strip())
             test_suites.append(suite)
-    
-    print(test_suites)
 
 
+# Given: Game screen
+# Returns: Whether to full quit game?
+# Description: Help screen that displays useful instructions about game procedure
 def help_screen(screen):
     # Track if screen should be running 
     running = True
@@ -436,6 +455,7 @@ def help_screen(screen):
     button_info2 = button_font.render('Continue' , 1 , 'white')
 
     while running:
+        # Current position of the mouse
         mouse = pygame.mouse.get_pos()
 
         for event in pygame.event.get():
@@ -467,9 +487,13 @@ def help_screen(screen):
         # Updating game display
         pygame.display.update()
 
+    # return full_quit
     return False
        
 
+# Given: Game screen, tasks for test suite, player's current points, whether task has a hand sign
+# Returns: Whether to full quit game, player's total points
+# Description: Handles the running of a full test suite
 def run_test_suite(screen, tests, points, hand_signs):
     # Labels for the task display screen
     for index in range(5):
@@ -500,9 +524,15 @@ def run_test_suite(screen, tests, points, hand_signs):
     return False, points
 
 
+# Given: Game screen, which number current task is, task to be completed, whether task has a hand sign
+# Returns: Whether to full quit game?
+# Description: Displays a countdown before player completes a task
 def countdown_screen(screen, task_number, task, hand_signs):
+    # Track if screen should be running 
     running = True
+    # Current time passed
     timer = 0
+    # Countdown time
     max_time = 5
 
     # Setting the background
@@ -553,6 +583,7 @@ def countdown_screen(screen, task_number, task, hand_signs):
         # Updating the full display surface
         pygame.display.flip()
 
+        # Screen updates every ~100ms
         pygame.time.delay(100)
         timer += 0.1
 
@@ -564,16 +595,25 @@ def countdown_screen(screen, task_number, task, hand_signs):
             # Skip screen by clicking 9
             if pygame.key.get_pressed()[pygame.K_9]:
                 return False
-
+    
+    # return full_quit
     return False
 
 
+# Given: Game screen, which number current task is, task to be completed, whether task has a hand sign
+# Returns: Whether task was completed successfully, time remaining when task was completed, whether to full quit game?
+# Description: Displays task for patient to complete and a countdown to complete in
 def task_screen(screen, task_number, task, hand_signs):
+    # Track if screen should be running 
     running = True
+    # Current time passed
     timer = 0
+    # Countdown time
     max_time = 8
 
+    # Loading background for screen
     bg = pygame.image.load("images/circuit_bg.png")
+    # Fonts for on-screen text
     header_font = pygame.font.Font(None, 100)
     task_num_font = pygame.font.Font(None, 150)
     
@@ -617,6 +657,7 @@ def task_screen(screen, task_number, task, hand_signs):
         # Updating the full display surface
         pygame.display.flip()
 
+        # Screen updates every ~100ms
         pygame.time.delay(100)
         timer += 0.1
 
@@ -634,26 +675,36 @@ def task_screen(screen, task_number, task, hand_signs):
     return False, 0, False
 
 
-def benchmark_compare(screen, data, suite_number, task):
-    benchmark = []
-    success = True
+def read_data():
+    current_data = []
 
-    if suite_number == 1:
-        benchmark = TEST_SUITE_1[task]
-    elif suite_number ==2:
-        benchmark = TEST_SUITE_2[task]
-    else:
-        benchmark = TEST_SUITE_3[task]
+    return current_data
+
+
+# Given: Task to be completed
+# Returns: Whether task was completed successfully
+# Description: Compares current hand position data to task's benchmark
+def benchmark_compare(task):
+    # Read in hand position data
+    data = read_data()
+    # Grabbing the benchmark for this task
+    benchmark = benchmarks[task]
     
+    # Checking that each sensor matches benchmark
     for finger_num in range(8):
+        # Seeing if data is within tolerance of benchmark
         if (benchmark[finger_num] - data[finger_num]) > TOLERANCE:
-            success=False
-            return success
+            return False
     
-    return success
+    # Return task_success
+    return True
 
 
-def task_success(screen, task_num, points, points_earned_for_task, bonus_points):
+# Given: Game screen, current task number, player's total points, bonus points for completing task
+# Returns: Whether to full quit game
+# Description: Informs user that task was completed successfully, and how many points were earnt
+def task_success(screen, task_num, points, bonus_points):
+    # Track if screen should be running 
     running = True
 
     # Position of buttons
@@ -666,9 +717,8 @@ def task_success(screen, task_num, points, points_earned_for_task, bonus_points)
     bg = pygame.image.load("images/applause.jpg")
     screen.blit(bg, (0, -100))
     
-    default_font = pygame.font.Font(None, 140)
-
     # Displaying task successful message
+    default_font = pygame.font.Font(None, 140)
     task_success_surface = default_font.render("Task " + str(task_num) + " completed successfully!", 1, 'green')
     screen.blit(task_success_surface, (20, 30))
 
@@ -704,6 +754,7 @@ def task_success(screen, task_num, points, points_earned_for_task, bonus_points)
     button_info2 = button_font.render('Continue' , 1 , 'white')
 
     while running:
+        # Current position of the mouse
         mouse = pygame.mouse.get_pos()
 
         for event in pygame.event.get():
@@ -735,9 +786,13 @@ def task_success(screen, task_num, points, points_earned_for_task, bonus_points)
         # Updating game display
         pygame.display.update()
 
+    # Return full_quit
     return False
 
 
+# Given: Game screen, whether there are more suites to complete
+# Returns: Whether to move on to next suite, Whether to repeat test suite, Whether to full quit game
+# Description: Informs user that suite was completed successfully, and how many points they have
 def suite_complete_screen(screen, more_suites):
     # Track if screen should be running 
     running = True
@@ -748,6 +803,7 @@ def suite_complete_screen(screen, more_suites):
     button_width = 1300
     button_height = 125
 
+    # Defining positions of buttons
     if more_suites:
         repeat_suite_button_y = 370
         quit_tests_button_y = 590
@@ -758,10 +814,9 @@ def suite_complete_screen(screen, more_suites):
     # Setting the background
     bg = pygame.image.load("images/applause.jpg")
     screen.blit(bg, (0, -100))
-
-    default_font = pygame.font.Font(None, 140)
-
+    
     # Displaying test suite complete message
+    default_font = pygame.font.Font(None, 140)
     suite_complete_surface = default_font.render("Good job! Test suite complete!", 1, 'green')
     screen.blit(suite_complete_surface, (35, 25))
 
@@ -780,15 +835,15 @@ def suite_complete_screen(screen, more_suites):
 
     # Updating the full display surface
     pygame.display.flip()
-
-    button_font = pygame.font.Font(None, 100)
-
+    
     # Rendering text for buttons
+    button_font = pygame.font.Font(None, 100)
     button_info1 = button_font.render('Click to move onto next suite' , 1 , 'white')
     button_info2 = button_font.render('Click to attempt test suite again' , 1 , 'white')
     button_info3 = button_font.render('Otherwise, click here' , 1 , 'white')
 
     while running:
+        # Current position of the mouse
         mouse = pygame.mouse.get_pos()
 
         for event in pygame.event.get():
@@ -843,6 +898,7 @@ def suite_complete_screen(screen, more_suites):
         else:
             pygame.draw.rect(screen, button_color_light, [button_x,quit_tests_button_y,button_width,button_height])
 
+        # Displaying button text
         screen.blit(button_info2 , (button_x+115,repeat_suite_button_y+30))
         screen.blit(button_info3 , (button_x+300,quit_tests_button_y+30))
 
@@ -853,6 +909,9 @@ def suite_complete_screen(screen, more_suites):
     return False, False, False
 
 
+# Given: Game screen, player's points
+# Returns: Whether to full quit game?
+# Description: Final screen of the game that displays point total for player
 def final_screen(screen, points):
     # Track if screen should be running 
     running = True
@@ -924,6 +983,7 @@ def final_screen(screen, points):
         # Updating game display
         pygame.display.update()
 
+    # Return full_quit
     return False
 
 
