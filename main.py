@@ -90,6 +90,7 @@ def main():
     
     # Import tasks from external files
     import_tasks()
+    read_data()
 
     # Displaying the title screen
     full_quit, set_benchmarks = title_screen(screen)
@@ -348,6 +349,7 @@ def benchmark_screen(screen):
 
                 # Capture data by clicking SPACE
                 if pygame.key.get_pressed()[pygame.K_SPACE]:
+                    #data = read_data()
                     data = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
                     benchmarks[task] = data
                     benchmark_file.write("" + task + ": " + str(data) + "\n")
@@ -661,6 +663,10 @@ def task_screen(screen, task_number, task, hand_signs):
         pygame.time.delay(100)
         timer += 0.1
 
+        # Checking if current hand position data is correct
+        #if benchmark_compare(task):
+            #return True, time_remaining, False
+
         for event in pygame.event.get():
             # Quit the program if the window is closed
             if event.type == pygame.QUIT:
@@ -675,9 +681,22 @@ def task_screen(screen, task_number, task, hand_signs):
     return False, 0, False
 
 
+# Given: None
+# Returns: Current hand position data
+# Description: Reads in the current hand position data and formats it
 def read_data():
-    current_data = []
+    # Read in data from file
+    data_file = open("data.csv", "r")
+    current_data = data_file.readlines()[-1]
+    data_file.close()
 
+    # Formatting then input data
+    current_data = current_data.split(',')
+    current_data.pop(0)
+    for i in range(len(current_data)):
+        current_data[i] = float(current_data[i])
+
+    # Return current hand position data
     return current_data
 
 
@@ -691,7 +710,7 @@ def benchmark_compare(task):
     benchmark = benchmarks[task]
     
     # Checking that each sensor matches benchmark
-    for finger_num in range(8):
+    for finger_num in range(len(benchmark)):
         # Seeing if data is within tolerance of benchmark
         if (benchmark[finger_num] - data[finger_num]) > TOLERANCE:
             return False
