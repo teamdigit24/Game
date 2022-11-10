@@ -256,7 +256,7 @@ def benchmark_screen(screen):
             if pygame.key.get_pressed()[pygame.K_SPACE]:
                 running = False
     
-    # Create new benchmark file
+    # Create new benchmark file with timestamp
     benchmark_file = open("Benchmarks/benchmarks_" + str(datetime.datetime.now().strftime('%Y_%m_%d_%H_%M_%S')) + ".txt", "a")
     
     # Creating a dict to hold the benchmark values
@@ -665,7 +665,7 @@ def benchmark_compare(task):
     # Checking that each sensor matches benchmark
     for finger_num in range(len(benchmark)):
         # Seeing if data is within tolerance of benchmark
-        if (benchmark[finger_num] - data[finger_num]) > TOLERANCE:
+        if abs(benchmark[finger_num]-data[finger_num]) / ((benchmark[finger_num]-data[finger_num])/2) *100 < TOLERANCE:
             return False
     
     # Return task_success
