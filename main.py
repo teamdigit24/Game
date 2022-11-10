@@ -12,46 +12,6 @@ BONUS_POINTS_PER_SECOND = 1
 # Tolerance for comparing to benchmark
 TOLERANCE = 10
 
-# Test suites
-TEST_SUITE_1 = [
-                "Curl Thumb",
-                "Curl Index Finger",
-                "Curl Middle Finger",
-                "Curl Ring Finger",
-                "Curl Pinky Finger",
-                "Move Index Finger Away From Other Fingers",
-                "Move Pinky Finger Away From Other Fingers",
-                "Separate Index and Middle Fingers from Pinky and Ring Fingers"
-               ]
-TEST_SUITE_2 = [
-                "Curl Thumb and Index Fingers",
-                "Curl Thumb and Middle Fingers",
-                "Curl Thumb and Ring Fingers",
-                "Curl Thumb and Pinky Fingers",
-                "Curl Index and Middle Fingers",
-                "Curl Index and Ring Fingers",
-                "Curl Index and Pinky Fingers",
-                "Curl Middle and Ring Fingers",
-                "Curl Middle and Pinky Fingers",
-                "Curl Ring and Pinky Fingers",
-                "Move Index Finger Away From Other Fingers",
-                "Move Pinky Finger Away From Other Fingers",
-                "Separate Index and Middle Fingers from Pinky and Ring Fingers"
-               ]
-TEST_SUITE_3 = [
-                "Make a peace sign",
-                "Make a Vulcan sign",
-                "Make a fist bump",
-                "Make a rock and roll sign",
-                "Make a thumb up sign",
-                "Make a finger gun sign",
-                "Make a shaka sign",
-                "Make a pointer sign",
-                "Move Index Finger Away From Other Fingers",
-                "Move Pinky Finger Away From Other Fingers",
-                "Separate Index and Middle Fingers from Pinky and Ring Fingers"
-               ]
-
 # File paths for the images for hand sign tasks
 hand_signs_images = {
                      "Make a peace sign": "peace_sign.jpg",
@@ -65,7 +25,6 @@ hand_signs_images = {
                     }
 
 # Test suites to use for testing
-test_suites1 = [TEST_SUITE_1, TEST_SUITE_2, TEST_SUITE_3]
 test_suites = []
 # Dict to hold the benchmarks
 benchmarks =  {}
@@ -129,12 +88,6 @@ def main():
             more_suites = True
         else:
             more_suites = False
-        
-        # Checking if this is the test suites with hand signs
-        if test_suite == TEST_SUITE_3:
-            hand_signs = True
-        else:
-            hand_signs = False
 
         # Whether user wants to repeat test suite or not
         repeat = True
@@ -143,7 +96,7 @@ def main():
             test_suite_copy = test_suite.copy()
             # Running the test suite
             points_before = points
-            full_quit, points = run_test_suite(screen, test_suite_copy, points, hand_signs)    
+            full_quit, points = run_test_suite(screen, test_suite_copy, points)
             if full_quit:
                 return
             
@@ -493,10 +446,10 @@ def help_screen(screen):
     return False
        
 
-# Given: Game screen, tasks for test suite, player's current points, whether task has a hand sign
+# Given: Game screen, tasks for test suite, player's current points
 # Returns: Whether to full quit game, player's total points
 # Description: Handles the running of a full test suite
-def run_test_suite(screen, tests, points, hand_signs):
+def run_test_suite(screen, tests, points):
     # Labels for the task display screen
     for index in range(5):
 
@@ -504,12 +457,12 @@ def run_test_suite(screen, tests, points, hand_signs):
         task = tests.pop(random.randrange(len(tests)))
 
         # Displaying the task countdown
-        full_quit = countdown_screen(screen, index+1, task, hand_signs)
+        full_quit = countdown_screen(screen, index+1, task)
         if full_quit:
             return True, points
 
         # Displaying the task
-        success, time_remaining, full_quit = task_screen(screen, index, task, hand_signs)    
+        success, time_remaining, full_quit = task_screen(screen, index, task)   
         if full_quit:
             return True, points
         
@@ -518,7 +471,7 @@ def run_test_suite(screen, tests, points, hand_signs):
             bonus_points = int(time_remaining) *  BONUS_POINTS_PER_SECOND
             points_earned_for_task = BASE_POINTS + bonus_points
             points += points_earned_for_task
-            full_quit = task_success(screen, index+1, points, points_earned_for_task, bonus_points)
+            full_quit = task_success(screen, index+1, points, bonus_points)
             if full_quit:
                 return True, points
 
@@ -526,10 +479,10 @@ def run_test_suite(screen, tests, points, hand_signs):
     return False, points
 
 
-# Given: Game screen, which number current task is, task to be completed, whether task has a hand sign
+# Given: Game screen, which number current task is, task to be completed
 # Returns: Whether to full quit game?
 # Description: Displays a countdown before player completes a task
-def countdown_screen(screen, task_number, task, hand_signs):
+def countdown_screen(screen, task_number, task):
     # Track if screen should be running 
     running = True
     # Current time passed
@@ -558,7 +511,7 @@ def countdown_screen(screen, task_number, task, hand_signs):
         screen.blit(bg, (0, 0))     
 
         # If on test suite with hand signs, need to account for pictures
-        if hand_signs and (hand_signs_images.get(task) != None):
+        if hand_signs_images.get(task) != None:
             # Displaying task number and description
             text_surface = font.render("Task " + str(task_number) + ": " + task, 1, 'green')
             screen.blit(text_surface, (25, 25))
@@ -602,10 +555,10 @@ def countdown_screen(screen, task_number, task, hand_signs):
     return False
 
 
-# Given: Game screen, which number current task is, task to be completed, whether task has a hand sign
+# Given: Game screen, which number current task is, task to be completed
 # Returns: Whether task was completed successfully, time remaining when task was completed, whether to full quit game?
 # Description: Displays task for patient to complete and a countdown to complete in
-def task_screen(screen, task_number, task, hand_signs):
+def task_screen(screen, task_number, task):
     # Track if screen should be running 
     running = True
     # Current time passed
@@ -646,7 +599,7 @@ def task_screen(screen, task_number, task, hand_signs):
         task_surface1 = task_num_font.render("Task: ", 1, 'green')
         task_surface2 = task_font.render(task, 1, 'white')
         
-        if hand_signs and (hand_signs_images.get(task) != None):
+        if hand_signs_images.get(task) != None:    
             screen.blit(task_surface1, (650, 25))
             screen.blit(task_surface2, (25, 175))
             hand_sign_image = pygame.image.load("images/task_images/"+hand_signs_images.get(task))
