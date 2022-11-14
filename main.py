@@ -10,7 +10,7 @@ BASE_POINTS = 10
 BONUS_POINTS_PER_SECOND = 1
 
 # Tolerance for comparing to benchmark
-TOLERANCE = 15
+TOLERANCE = 40
 
 # File paths for the images for hand sign tasks
 hand_signs_images = {
@@ -639,7 +639,7 @@ def task_screen(screen, task_number, task):
 # Description: Reads in the current hand position data and formats it
 def read_data():
     # Read in data from file
-    data_file = open("data.csv", "r")
+    data_file = open("..\data2.csv", "r")
     current_data = data_file.readlines()[-1]
     data_file.close()
 
