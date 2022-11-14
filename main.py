@@ -10,7 +10,7 @@ BASE_POINTS = 10
 BONUS_POINTS_PER_SECOND = 1
 
 # Tolerance for comparing to benchmark
-TOLERANCE = 10
+TOLERANCE = 15
 
 # File paths for the images for hand sign tasks
 hand_signs_images = {
