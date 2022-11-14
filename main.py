@@ -10,7 +10,7 @@ BASE_POINTS = 10
 BONUS_POINTS_PER_SECOND = 1
 
 # Tolerance for comparing to benchmark
-TOLERANCE = 40
+TOLERANCE = 25
 
 # File paths for the images for hand sign tasks
 hand_signs_images = {
@@ -302,8 +302,9 @@ def benchmark_screen(screen):
 
                 # Capture data by clicking SPACE
                 if pygame.key.get_pressed()[pygame.K_SPACE]:
-                    data = read_data()
+                    #data = read_data()
                     #data = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
+                    data = [1.0, 2.0, 3.0, 4.0, 5.0]
                     benchmarks[task] = data
                     benchmark_file.write("" + task + ": " + str(data) + "\n")
                     running = False
@@ -353,7 +354,7 @@ def import_tasks():
     for filename in os.listdir('Tasks'):
         with open(os.path.join(os.getcwd(), 'Tasks', filename), 'r') as task_file:
             suite = []
-            # Adding tasks in thos file to test suites
+            # Adding tasks in those file to test suites
             for task in task_file:
                 suite.append(task.strip())
             test_suites.append(suite)
@@ -615,10 +616,11 @@ def task_screen(screen, task_number, task):
         # Screen updates every ~100ms
         pygame.time.delay(100)
         timer += 0.1
-
+        time_remaining = str(max_time-int(timer))
+        
         # Checking if current hand position data is correct
-        #if benchmark_compare(task):
-            #return True, time_remaining, False
+        if benchmark_compare(task):
+            return True, time_remaining, False
 
         for event in pygame.event.get():
             # Quit the program if the window is closed
@@ -627,7 +629,6 @@ def task_screen(screen, task_number, task):
 
             # Simulate success by clicking 0
             if pygame.key.get_pressed()[pygame.K_0]:
-                time_remaining = str(max_time-int(timer))
                 return True, time_remaining, False
 
     # Return success, time_remaining, full_quit
@@ -639,8 +640,8 @@ def task_screen(screen, task_number, task):
 # Description: Reads in the current hand position data and formats it
 def read_data():
     # Read in data from file
-    # data_file = open("data2.csv", "r")
-    data_file = open("..\data2.csv", "r")
+    data_file = open("data2.csv", "r")
+    #data_file = open("..\data2.csv", "r")
     current_data = data_file.readlines()[-1]
     data_file.close()
 
@@ -662,11 +663,11 @@ def benchmark_compare(task):
     data = read_data()
     # Grabbing the benchmark for this task
     benchmark = benchmarks[task]
-    
+ 
     # Checking that each sensor matches benchmark
     for finger_num in range(len(benchmark)):
         # Seeing if data is within tolerance of benchmark
-        if abs( (benchmark[finger_num]-data[finger_num]) / (data[finger_num])) *100 < TOLERANCE:
+        if (abs( (benchmark[finger_num]-data[finger_num]) / (data[finger_num])) *100) > TOLERANCE:
             return False
     
     # Return task_success
