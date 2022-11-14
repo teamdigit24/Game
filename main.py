@@ -58,6 +58,10 @@ def main():
 
     # If user wants to set benchmarks
     if set_benchmarks:
+        # Display finger labeling info
+        full_quit = finger_name_screen(screen)
+        if full_quit:
+            return
         full_quit, continue_game = benchmark_screen(screen)
         if full_quit | (not continue_game):
             return
@@ -72,6 +76,10 @@ def main():
                 values[i] = float(values[i])
             split_line[1] = values
             benchmarks[split_line[0]] = split_line[1]
+        # Display finger labeling info
+        full_quit = finger_name_screen(screen)
+        if full_quit:
+            return
     
     # Displaying the help screen
     full_quit = help_screen(screen)
@@ -272,8 +280,7 @@ def benchmark_screen(screen):
 
             # Displaying the task
             task_word_font = pygame.font.Font(None, 150)
-            task_surface = task_word_font.render("Task: ", 1, 'white')
-            screen.blit(task_surface, (625, 150))
+            task_word_surface = task_word_font.render("Task: ", 1, 'white')
 
             # Determining task font size
             if len(task) < 20:
@@ -285,7 +292,17 @@ def benchmark_screen(screen):
             else:
                 task_font = pygame.font.Font(None, 65) 
             task_surface = task_font.render(task, 1, 'white')
-            screen.blit(task_surface, (20, 300))
+
+            # If task requires picture, need to account for that and add it in
+            if hand_signs_images.get(task) != None:
+                screen.blit(task_word_surface, (625, 50))
+                screen.blit(task_surface, (20, 150))
+                hand_sign_image = pygame.image.load("images/task_images/"+hand_signs_images.get(task))
+                hand_sign_image = pygame.transform.scale(hand_sign_image, (350, 350))
+                screen.blit(hand_sign_image, (575, 300))
+            else:
+                screen.blit(task_word_surface, (625, 150))
+                screen.blit(task_surface, (20, 300))
 
             # Displaying how to record data
             capture_font = pygame.font.Font(None, 100)
@@ -344,6 +361,84 @@ def benchmark_screen(screen):
                 
     # return full_quit, continue_game
     return False, True
+
+
+# Given: Game screen
+# Returns: Whether to full quit game?
+# Description: Shows the user a diagram with the finger label names used in the task descriptions
+def finger_name_screen(screen):
+    running = True
+    
+    # Position of buttons
+    button_y = 500
+    button_x = 900
+    button_wdith = 350
+    button_height = 200
+
+    # Setting the background
+    bg = pygame.image.load("images/hand_palm.jpg")
+    screen.blit(bg, (0, 0))
+
+    # Displaying information
+    font = pygame.font.Font(None, 100)
+    info = font.render("The labeling scheme of different fingers", 1, 'white')
+    screen.blit(info, (70, 25))
+    info = font.render("used for the tests can be seen below", 1, 'white')
+    screen.blit(info, (140, 100))
+    info = font.render("Please familiarize yourself with them", 1, 'white')
+    screen.blit(info, (125, 200))
+
+    # Displaying hand image
+    hand_image = pygame.image.load("images/finger_names.png")
+    hand_image = pygame.transform.scale(hand_image, (328,518))
+    screen.blit(hand_image, (300, 275))
+
+    pygame.display.flip()
+
+    # Rendering info for button and how to proceed
+    button_font = pygame.font.Font(None, 100)
+    continue_font = pygame.font.Font(None, 75)
+
+    button_info1 = button_font.render('Click to' , 1 , 'white')
+    button_info2 = button_font.render('Continue' , 1 , 'white')
+    continue_info = continue_font.render("Or Press SPACE", 1, 'green')
+    screen.blit(continue_info, (875, 710))
+
+    while running:
+        # Current position of the mouse
+        mouse = pygame.mouse.get_pos()
+
+        for event in pygame.event.get():
+            # Quit the program if the window is closed
+            if event.type == pygame.QUIT:
+                return True
+            
+            # Continue in the program is space is pressed
+            if pygame.key.get_pressed()[pygame.K_SPACE]:
+                running = False
+
+             # Checking if mouse button is being pressed
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                # Checking if button is being pressed
+                if button_x <= mouse[0] <= button_x+button_wdith and button_y <= mouse[1] <= button_y+button_height:
+                    return False
+
+        # Creating button
+        if button_x <= mouse[0] <= button_x+button_wdith and button_y <= mouse[1] <= button_y+button_height:
+            pygame.draw.rect(screen, button_color_dark, [button_x,button_y,button_wdith,button_height])
+            
+        else:
+            pygame.draw.rect(screen, button_color_light, [button_x,button_y,button_wdith,button_height])
+
+        # Adding text to start button
+        screen.blit(button_info1 , (button_x+50,button_y+35))
+        screen.blit(button_info2 , (button_x+20,button_y+110))
+
+        # Updating game display
+        pygame.display.update()
+    
+    # return full_quit
+    return False
 
 
 # Given: None
