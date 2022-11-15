@@ -10,7 +10,7 @@ BASE_POINTS = 10
 BONUS_POINTS_PER_SECOND = 1
 
 # Tolerance for comparing to benchmark
-TOLERANCE = 25
+TOLERANCE = 4
 
 # File paths for the images for hand sign tasks
 hand_signs_images = {
@@ -446,7 +446,7 @@ def finger_name_screen(screen):
 # Description: Imports tasks from external files and creates the test suites
 def import_tasks():
     # Opening all files in /Tasks folder
-    for filename in os.listdir('Tasks'):
+    for filename in sorted(os.listdir('Tasks')):
         with open(os.path.join(os.getcwd(), 'Tasks', filename), 'r') as task_file:
             suite = []
             # Adding tasks in those file to test suites
@@ -762,8 +762,8 @@ def benchmark_compare(task):
     # Checking that each sensor matches benchmark
     for finger_num in range(len(benchmark)):
         # Seeing if data is within tolerance of benchmark
-        if data[finger_num] == 0:
-            next
+        if int(data[finger_num]) == 0:
+            continue
         if (abs( (benchmark[finger_num]-data[finger_num]) / (data[finger_num])) *100) > TOLERANCE:
             return False
     
