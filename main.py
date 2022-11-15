@@ -319,9 +319,9 @@ def benchmark_screen(screen):
 
                 # Capture data by clicking SPACE
                 if pygame.key.get_pressed()[pygame.K_SPACE]:
-                    #data = read_data()
+                    data = read_data()
                     #data = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
-                    data = [1.0, 2.0, 3.0, 4.0, 5.0]
+                    #data = [1.0, 2.0, 3.0, 4.0, 5.0]
                     benchmarks[task] = data
                     benchmark_file.write("" + task + ": " + str(data) + "\n")
                     running = False
@@ -735,8 +735,8 @@ def task_screen(screen, task_number, task):
 # Description: Reads in the current hand position data and formats it
 def read_data():
     # Read in data from file
-    data_file = open("data2.csv", "r")
-    #data_file = open("..\data2.csv", "r")
+    #data_file = open("data2.csv", "r")
+    data_file = open("..\data2.csv", "r")
     current_data = data_file.readlines()[-1]
     data_file.close()
 
