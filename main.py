@@ -762,6 +762,8 @@ def benchmark_compare(task):
     # Checking that each sensor matches benchmark
     for finger_num in range(len(benchmark)):
         # Seeing if data is within tolerance of benchmark
+        if data[finger_num] == 0:
+            next
         if (abs( (benchmark[finger_num]-data[finger_num]) / (data[finger_num])) *100) > TOLERANCE:
             return False
     
