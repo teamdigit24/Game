@@ -27,7 +27,7 @@
 - To set a new default benchmark, rename the desired benchmark file to benchmarks_default.txt
 
 ## Tasks:
-- Tasks are imported from files located under the /Tasks. 
+- Tasks are imported from files located under /Tasks. 
 - Tasks in each file are put into their own test suite.
 - To add new tasks, simply edit the file or create a new one to make a new test suite.
 - If you want to add an image for a new or existing task, follow procedure listed under Images section
