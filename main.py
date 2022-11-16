@@ -765,7 +765,11 @@ def benchmark_compare(task):
     for finger_num in range(len(benchmark)):
         # Prevent divide by 0 errors
         if int(data[finger_num]) == 0:
-            continue
+            if benchmark[finger_num] < 0.2:
+                continue
+            else:
+                return False
+                
         # Seeing if data is within tolerance of benchmark
         if (abs( (benchmark[finger_num]-data[finger_num]) / (data[finger_num])) *100) > TOLERANCE:
             return False
