@@ -16,6 +16,10 @@
 - Patients also have the option to reattempt test suites in order to score more points.
 - After all test suites are completed, the game will end.
 
+## Data Reading:
+- Sensor data is read in from a file written to by LabVIEW in real-time
+- File path for data file should be edited in read_data() function
+
 ## Benchmarks:
 - A default benchmark file is provided and can be used for test comparison.
 - New benchmarks can be set within the game from the title screen.

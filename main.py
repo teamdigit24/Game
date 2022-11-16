@@ -320,8 +320,6 @@ def benchmark_screen(screen):
                 # Capture data by clicking SPACE
                 if pygame.key.get_pressed()[pygame.K_SPACE]:
                     data = read_data()
-                    #data = [0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0]
-                    #data = [1.0, 2.0, 3.0, 4.0, 5.0]
                     benchmarks[task] = data
                     benchmark_file.write("" + task + ": " + str(data) + "\n")
                     running = False
@@ -758,12 +756,17 @@ def benchmark_compare(task):
     data = read_data()
     # Grabbing the benchmark for this task
     benchmark = benchmarks[task]
- 
+
+    # If read data is missing a point or has an extra for some reason
+    if len(benchmark) != len(data):
+        return False
+
     # Checking that each sensor matches benchmark
     for finger_num in range(len(benchmark)):
-        # Seeing if data is within tolerance of benchmark
+        # Prevent divide by 0 errors
         if int(data[finger_num]) == 0:
             continue
+        # Seeing if data is within tolerance of benchmark
         if (abs( (benchmark[finger_num]-data[finger_num]) / (data[finger_num])) *100) > TOLERANCE:
             return False
     
