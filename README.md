@@ -7,6 +7,7 @@
 - Sensor data is written to an external CSV file by LabVIEW, and then read in by the game for testing.
 - Points are earned through completing tasks in the game.
     - Bonus points are earned based on how fast a task is completed
+- A set of tests have been provided in Game_tests.docx, that test that each screen functions as intended
 
 ## Operation:
 - To start the game, run ./main.py from the cmd line or terminal at the folder's level.
@@ -36,4 +37,4 @@
 - Sources for images used can be found under image_sources.txt
 - To add an image for a new task:
     1. Add image to images/task_images/ folder
-    2. In main.py, add the exact task name and image name to the hand_sign_images dict 
+    2. In main.py, add the exact task name and image name to the hand_sign_images dict on line 16
