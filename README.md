@@ -26,6 +26,9 @@
 - New benchmarks can be set within the game from the title screen.
     - These are time stamped with the current date and time
 - To set a new default benchmark, rename the desired benchmark file to benchmarks_default.txt
+- A tolerance percentage value is set within the code
+    -  During testing, each sensor value of the patient's input data needs to fall within this tolerance of the benchmark value.
+    - The tolerance percentage can be changed in the code by modifying the TOLERANCE variable's value
 
 ## Tasks:
 - Tasks are imported from files located under /Tasks. 
